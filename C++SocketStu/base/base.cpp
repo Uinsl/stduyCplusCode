@@ -26,13 +26,13 @@ int ser() {
 void setvar(int a)
 {}
 
-void setvar2(int& a)
+void setvar2(int& a)//左值引用，只能左值引用仅仅接受左值
 {}
 
-void setvar3(const int& a)
+void setvar3(const int& a) //  常量引用：因为它们兼容临时的右值和实际存在的左值变量
 {}
 
-void setvar4(int&& a)
+void setvar4(int&& a) // 右值引用：不能绑定到左值 可以通过常引用或者右值引用延长右值的生命周期 “有名字的右值引用是左值”
 {}
 
 int main()
