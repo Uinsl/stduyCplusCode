@@ -13,11 +13,51 @@ int main()
 */
 
 
+
+#if 1
+#include <iostream>
+using namespace std;
+#define wait std::cin.get();
+
+int ser() {
+	return 99;
+}
+
+void setvar(int a)
+{}
+
+void setvar2(int& a)
+{}
+
+void setvar3(const int& a)
+{}
+
+void setvar4(int&& a)
+{}
+
+int main()
+{
+	setvar(ser());
+	//setvar2(ser());
+	setvar3(ser());
+	setvar4(ser());
+
+	setvar(11);
+	//setvar2(11);
+	setvar3(11);
+	setvar4(11);
+	wait
+}
+
+#endif 
+
+
+
 // 拷贝2 move
 // https://zhuanlan.zhihu.com/p/637590612
 // 傻逼C++报错 https://blog.csdn.net/huanhuan59/article/details/84841795
 // 找到【项目属性】，点击【C++】里的【预处理器】，对【预处理器定义】进行编辑，在里面加入一段代码：_CRT_SECURE_NO_WARNINGS。
-#if 1
+#if 0
 #include <iostream>
 using namespace std;
 #define wait std::cin.get();
