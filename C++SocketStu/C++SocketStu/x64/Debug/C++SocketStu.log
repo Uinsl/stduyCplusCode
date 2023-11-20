@@ -1,0 +1,3 @@
+﻿  mySock.cpp
+C:\Users\young\source\repos\C++SocketStu\C++SocketStu\mySock.cpp(97,44): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+  C++SocketStu.vcxproj -> C:\Users\young\source\repos\C++SocketStu\x64\Debug\C++SocketStu.exe
