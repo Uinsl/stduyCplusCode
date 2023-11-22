@@ -5,51 +5,126 @@ using namespace std;
 #define wait std::cin.get();
 int main()
 {
-	
+
 	wait
 }
 
-#endif 
+#endif
+
 */
 
 
 
 #if 1
 #include <iostream>
+#include <array>
 using namespace std;
-#define wait std::cin.get();
 
-int ser() {
-	return 99;
+//int val = 12;
+// int& func()
+// https://c.biancheng.net/view/195.html
+// P91
+// https://www.bilibili.com/video/BV1gk4y1r7UH
+// const int& func()
+// https://zhuanlan.zhihu.com/p/256423512
+
+
+int& getVar() {// getVar 返回的是什么东西 int* 同问。
+	static int val;
+	cout << "val = " << val << endl;
+	return val;
 }
 
-void setvar(int a)
-{}
+int* getVar2() {
+	int bb = 121;
+	return &bb;
+}
 
-void setvar2(int& a)//左值引用，只能左值引用仅仅接受左值
-{}
 
-void setvar3(const int& a) //  常量引用：因为它们兼容临时的右值和实际存在的左值变量
-{}
-
-void setvar4(int&& a) // 右值引用：不能绑定到左值 可以通过常引用或者右值引用延长右值的生命周期 “有名字的右值引用是左值”
-{}
-
-int main()
+template<typename T, size_t S>
+class myArray
 {
-	setvar(ser());
-	//setvar2(ser());
-	setvar3(ser());
-	setvar4(ser());
+public:
+	constexpr int size() const { return S; }
 
-	setvar(11);
-	//setvar2(11);
-	setvar3(11);
-	setvar4(11);
-	wait
+	T& operator[](size_t index) {
+
+		return m_data[index];
+	}
+
+	const T& operator[](size_t index) const { return m_data[index]; }
+
+	T* Data() { return m_data; }
+	const 	T* Data() const { return m_data; }
+private:
+	T m_data[S];
+};
+
+
+
+class Student {
+public:
+	int& GetAge() { // GetAge 返回的是什么东西 int* 同问。
+		return m_age;
+	}
+
+	const int& GetAgeConst() {
+		mm = 8;
+		m_age = 999;
+		return m_age;
+	}
+
+	void ShowAge() {
+		cout << "Age: " << m_age << endl;
+	}
+
+private:
+	int m_age = 0;
+	int mm = 1;
+
+};
+
+
+int main() {
+	int size = 5;
+	myArray<int, 5> data;
+	data.size();
+	for (int i = 0; i < data.size(); i++) {
+		data[i] = i;
+		//cout << data[i] << endl;
+	}
+
+	for (int i = 0; i < data.size(); i++) {
+		//data[i] = 2;
+		cout << data[i] << endl;
+	}
+	int* mp;
+	//mp = getVar();
+	mp = &(getVar());
+	getVar() = 99;
+	auto a = getVar();//返回的是地址 &m_age ? *m_age?
+	int aa = getVar();
+
+	cout << "getvar = " << &(getVar()) << endl; //0x00007FF67EC3F444 99
+
+	Student stu;
+	stu.ShowAge();
+
+	stu.GetAge() = 5; // 会修改成员变量的值
+	stu.ShowAge();
+
+	//stu.GetAgeConst() = a8; // 编译器会报错
+	stu.ShowAge();
+
+
+	//const auto& arrayReference = data;
+	//arrayReference[1] = 2;
+
 }
-
 #endif 
+
+
+
 
 
 
@@ -195,12 +270,12 @@ class String {
 
 public:
 	String() = default;//构造函数
-	String(const char* string) { 
+	String(const char* string) {
 		// 常量引用和右值引用也可以，但是指针会方便一点
 		printf("Created!\n");
-		
+
 	}
-	
+
 
 
 };
@@ -217,7 +292,7 @@ struct MyStruct
 };
 
 ostream& operator<<(ostream& stream, const MyStruct& vv) {
-	stream << vv.x <<"," << vv.y<<"," << vv.z << endl;
+	stream << vv.x << "," << vv.y << "," << vv.z << endl;
 	return stream;
 }
 
@@ -253,7 +328,7 @@ int main()
 	e.print();
 
 	enti* ptr = &e;
-	enti& en = *ptr; 
+	enti& en = *ptr;
 	(*ptr).print();
 	en.print();
 	ptr->print();// 箭头操作符 
@@ -285,6 +360,8 @@ int main()
 #endif 
 
 
+// const
+// https://www.bilibili.com/video/BV1oD4y1h7S3
 #if 0
 #include <iostream>
 using namespace std;
@@ -293,7 +370,9 @@ class myen {
 public:
 	mutable int x;
 	int y;
-	int getx() const { //mutable x 可以修改 x= 11；
+	int getx() const { //mutable x 可以修改 x= 11； 
+		//1、作于域内，不可以修改函数成员
+		//2、在外可以被const myen& a,a.getx调用
 		x = 11;
 		return x;
 	}
@@ -305,8 +384,8 @@ private:
 	string name;
 	int age;
 public:
-	student() 
-		:name("Unkonw"),age(99) //初始化列表 
+	student()
+		:name("Unkonw"), age(99) //初始化列表 
 	{
 		// name = "Unkonw";
 		// age = 99;
@@ -321,6 +400,7 @@ void fune(const myen& a) {
 
 int main()
 {
+	cout << "myConst-----------------";
 	myen en1;
 	en1.x = 99;
 	en1.y = 12;
@@ -342,7 +422,7 @@ int main()
 {
 	const char* name = "HHH";
 	// name[0] = "P";
-	char name2[4] = {'H','H','H','\0'};
+	char name2[4] = { 'H','H','H','\0' };
 	cout << name2 << endl;
 
 	int b = 99;
@@ -393,7 +473,7 @@ int main()
 
 enum Enx : int
 {
-	A=1,B=2,C=3
+	A = 1, B = 2, C = 3
 };
 
 int main()
@@ -428,7 +508,7 @@ public:
 	const int LogLevelWarning = 1;
 	const int LogLevelInfo = 2;
 	*/
-	enum  level:int
+	enum  level :int
 	{
 		// Error = 0, Warning = 1, Info = 2
 		levelError = 0, levelWarning = 1, levelInfo = 2
@@ -438,7 +518,7 @@ public:
 private:
 	level m_LogLevel = levelInfo;
 public:
-	void SetLevel(level level) 
+	void SetLevel(level level)
 	{
 		m_LogLevel = level;
 	}
@@ -477,7 +557,7 @@ claee p11{
 }
 
 class p22{
-	void GetName() override {return m_Name;}  
+	void GetName() override {return m_Name;}
 	//C++11新标准允许给被重写的函数用"override"关键字标记,增强代码可读性。
 }
 
@@ -528,7 +608,7 @@ int main()
 #define struct class //类和结构体区别没有
 
 
-class Player 
+class Player
 {
 public:
 
@@ -590,7 +670,7 @@ using namespace std;
 int main()
 {
 	int a = 1;
-	int b { 2 };
+	int b{ 2 };
 	const int c = 13;
 	int const c1 = 15;
 	cout << sizeof(a) << endl;
@@ -640,7 +720,7 @@ buffer getbuffer() {
 }
 
 // --------------
-void setbuffer(const buffer &buf){
+void setbuffer(const buffer& buf) {
 	cout << " setbuffer &buf 地址" << &buf << endl;
 	cout << " setbuffer buf =" << &buf << endl;
 }
@@ -712,8 +792,8 @@ struct myVexctor
 	int y;
 };
 
-myVexctor operator * (int a,myVexctor b ) 
-{ 
+myVexctor operator * (int a, myVexctor b)
+{
 	myVexctor r;
 	r.x = a * b.x;
 	r.y = a * b.y;
@@ -730,7 +810,7 @@ public:
 		mx = 0;
 		my = 0;
 	};
-	Test(int a,int b) {
+	Test(int a, int b) {
 		mx = a;
 		my = b;
 	};
@@ -742,7 +822,7 @@ public:
 	// 全局--运算符重载函数
 
 	// 拷贝构造函数
-	Test(const Test& another) 
+	Test(const Test& another)
 	{
 		cout << "拷贝构造函数" << endl;
 		mx = another.mx;
@@ -752,7 +832,7 @@ public:
 	// Test t1(99,88);
 	// Test t2 = t1; //拷贝构造函数
 	// Test t3; t3 = t1; // 运算符，不是拷贝构造函数；
-	
+
 
 
 private:
@@ -767,7 +847,7 @@ ta minValue(ta a, ta b) {
 	return a + b;
 }
 
-template<class ta,class tb>
+template<class ta, class tb>
 ta minValue2(ta a, tb b) {
 	return (ta)(a + b);
 }
@@ -825,7 +905,7 @@ int main() {
 	*p1 = 99;
 	cout << "\n p1 = " << p1 << endl; //  输出：000002C1764D9510
 	cout << "*p1 = " << *p1 << endl; // 99
-	cout << "&p1 = " << &p1 <<"\n" << endl;// new 输出：000000ED2C8FF908
+	cout << "&p1 = " << &p1 << "\n" << endl;// new 输出：000000ED2C8FF908
 	//  000000472D93F738 &p 不变；
 	// new int 等同于 int a;
 	delete p1;//释放new int 的内存块
@@ -861,7 +941,7 @@ int main() {
 		cout << "Result is:" << s << endl;
 	}
 	catch (...) { // ... 所有情况
-		cout << "其他异常情况都在这里"  << endl;
+		cout << "其他异常情况都在这里" << endl;
 	}
 
 
