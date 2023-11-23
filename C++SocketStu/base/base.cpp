@@ -19,8 +19,8 @@ int main()
 #include <iostream>
 #include <array>
 using namespace std;
-
-//int val = 12;
+// 
+// int val = 12;
 // int& func()
 // https://c.biancheng.net/view/195.html
 // P91
@@ -33,6 +33,16 @@ using namespace std;
 // 左值函数返回值和变量返回值 区别:
 // https://blog.csdn.net/idream68/article/details/115404171
 // https://blog.csdn.net/m0_66249378/article/details/128388531
+// 
+// 等号是否会调用拷贝构造函数
+// https://blog.csdn.net/ftimes/article/details/109321521
+// 
+// 左值引用返回值
+// https://www.cnblogs.com/david-china/p/17080072.html
+// int a = b ; 会
+// int d; d = b； 不会copy
+// int& getVar 不会 int getVar 会 ；
+// 怎么证明
 
 int& getVar() {// getVar 返回的是什么东西 int* 同问。
 	static int val;
@@ -73,6 +83,11 @@ public:
 	}
 	Student(const Student& a) {
 		cout << "Student() copy" << endl;
+	}
+
+	Student& operator=(Student& a) {
+		cout << "Student() copy" << endl;
+		return a; //因为a传进来是const 
 	}
 
 	int& GetAge() { // GetAge 返回的是什么东西 int* 同问。
@@ -125,10 +140,15 @@ int main() {
 
 	cout << "getvar = " << getVar() << endl;
 
-	//Student a1 = getstu();
-	//Student a2 = getstu2();//? =号呢？
-	getstu();//调用copy
-	getstu2();//不会调用copy
+	Student a1 = getstu(); //调用copy
+	Student a2 = getstu2();//? =号呢？//调用copy
+	//getstu();//调用copy
+	//getstu2();//不会调用copy 这应该就是左值引用返回值的用处。
+
+	//Student a1 ; //调用copy
+	//Student a2 ;//? =号呢？//调用copy
+	//a1 = getstu();
+	//a2 = getstu2();
 
 
 	getVar() = 99; //
