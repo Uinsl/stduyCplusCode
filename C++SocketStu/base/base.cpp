@@ -27,11 +27,16 @@ using namespace std;
 // https://www.bilibili.com/video/BV1gk4y1r7UH
 // const int& func()
 // https://zhuanlan.zhihu.com/p/256423512
-
+// 左值 右值 左值引用 右值引用
+// https://blog.csdn.net/m0_59938453/article/details/125858335
+// 
+// 左值函数返回值和变量返回值 区别:
+// https://blog.csdn.net/idream68/article/details/115404171
+// https://blog.csdn.net/m0_66249378/article/details/128388531
 
 int& getVar() {// getVar 返回的是什么东西 int* 同问。
 	static int val;
-	cout << "val = " << val << endl;
+	cout << "val = " << val << endl; // 0x00007FF71B48F444  00 00 00 00
 	return val;
 }
 
@@ -48,7 +53,6 @@ public:
 	constexpr int size() const { return S; }
 
 	T& operator[](size_t index) {
-
 		return m_data[index];
 	}
 
@@ -64,6 +68,13 @@ private:
 
 class Student {
 public:
+	Student() {
+		cout << "Student() create" << endl;
+	}
+	Student(const Student& a) {
+		cout << "Student() copy" << endl;
+	}
+
 	int& GetAge() { // GetAge 返回的是什么东西 int* 同问。
 		return m_age;
 	}
@@ -84,6 +95,16 @@ private:
 
 };
 
+Student t1;
+
+Student getstu() {
+	return t1;
+}
+
+Student& getstu2() {
+	return t1;
+}
+
 
 int main() {
 	int size = 5;
@@ -101,11 +122,21 @@ int main() {
 	int* mp;
 	//mp = getVar();
 	mp = &(getVar());
-	getVar() = 99;
-	auto a = getVar();//返回的是地址 &m_age ? *m_age?
-	int aa = getVar();
 
-	cout << "getvar = " << &(getVar()) << endl; //0x00007FF67EC3F444 99
+	cout << "getvar = " << getVar() << endl;
+
+	//Student a1 = getstu();
+	//Student a2 = getstu2();//? =号呢？
+	getstu();//调用copy
+	getstu2();//不会调用copy
+
+
+	getVar() = 99; //
+	auto a = getVar();//返回的是地址 &m_age ? *m_age? // 0x000000E4599FF874 63 00 00 00    等同 int a = 99;
+	int aa = getVar(); //0x000000E4599FF894   63 00 00 00  等同  int aa = 99;
+	int ac = a;
+
+	cout << "&getvar = " << &(getVar()) << endl; //0x00007FF67EC3F444 99 就是static int val
 
 	Student stu;
 	stu.ShowAge();
@@ -115,6 +146,8 @@ int main() {
 
 	//stu.GetAgeConst() = a8; // 编译器会报错
 	stu.ShowAge();
+
+
 
 
 	//const auto& arrayReference = data;
