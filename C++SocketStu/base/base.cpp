@@ -14,8 +14,69 @@ int main()
 */
 
 
-
 #if 1
+#include <iostream>
+using namespace std;
+#define wait std::cin.get();
+
+
+
+template<typename T, size_t S>
+class myArray
+{
+public:
+	constexpr int size() const { return S; }
+
+	T& operator[](int index) {
+		return m_data[index];
+	}
+
+	//auto& arrayReference = data;
+	T* operator[](int index) {
+		return m_data[index];
+	}
+
+	
+
+private:
+	T m_data[S];
+};
+
+
+int main()
+{
+	int size = 5;
+	myArray<int, 5> data;
+
+	int a[2] = { 1,2 };
+	auto& b = a;//????????
+
+	auto& arrayReference = data;//const 指针时
+	//const auto& arrayReference = data;//const 指针时
+
+	for (int i = 0;i <= data.size();i++) {
+		data[i] = i; //T& 
+		
+		cout << data[i] << endl;
+	}
+	//arrayReference[0] = 99;//const 引用 只能绑定在对象，不能绑定到常量
+
+
+
+	for (int i = 0;i <= data.size();i++) {
+		cout << data[i] << endl;
+		cout << arrayReference[i] << endl;//
+	}
+
+
+	wait
+}
+
+#endif
+
+
+
+#if 0
 #include <iostream>
 #include <array>
 using namespace std;
