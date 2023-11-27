@@ -13,8 +13,66 @@ int main()
 
 */
 
-
 #if 1
+#include <iostream>
+using namespace std;
+#define wait std::cin.get();
+
+template<typename T, size_t S>
+class myArray
+{
+public:
+
+	int size() { return S; }
+
+	T& operator[](int index) {
+		//cout << "T& []" << endl;
+		return m_data[index];
+	}
+
+	const T& operator[](int index) const {
+		return m_data[index];
+	}
+
+	T* Data() {
+		return m_data;
+	}
+
+	const T* Data() const {
+		return m_data;
+	}
+
+	/*
+	T& operator[](int index) const {
+		cout << "T& [] const" << endl;
+		return m_data[index];
+	}*/
+
+private:
+	T m_data[S];
+};
+
+int main()
+{
+
+	myArray<int, 5> data;
+	auto& ary = data;
+
+	for (int i = 0; i < 7; i++) {
+		ary[i] = i;
+	}
+
+	for (int i = 0; i < 7; i++) {
+		cout << "ary[" << i << "] = " << ary[i] << endl;
+	}
+
+	wait
+}
+
+#endif
+
+
+#if 0
 #include <iostream>
 using namespace std;
 #define wait std::cin.get();
