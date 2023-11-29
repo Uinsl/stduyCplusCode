@@ -13,51 +13,23 @@ int main()
 
 */
 
-#if 1
+#if 0
 #include <iostream>
 using namespace std;
 #define wait std::cin.get();
 
-template<typename T, size_t S>
-class myArray
-{
-public:
-
-	int size() { return S; }
-
-	T& operator[](int index) {
-		//cout << "T& []" << endl;
-		return m_data[index];
-	}
-
-	const T& operator[](int index) const {
-		return m_data[index];
-	}
-
-	T* Data() {
-		return m_data;
-	}
-
-	const T* Data() const {
-		return m_data;
-	}
-
-	/*
-	T& operator[](int index) const {
-		cout << "T& [] const" << endl;
-		return m_data[index];
-	}*/
-
-private:
-	T m_data[S];
-};
+#include "myArr1.h"
+//#include "myVec1.h"
 
 int main()
 {
 
-	myArray<int, 5> data;
+	const myArray<int, 5> data;
+	// 
 	auto& ary = data;
+	data.mmx(0);
 
+	/*
 	for (int i = 0; i < 7; i++) {
 		ary[i] = i;
 	}
@@ -65,6 +37,7 @@ int main()
 	for (int i = 0; i < 7; i++) {
 		cout << "ary[" << i << "] = " << ary[i] << endl;
 	}
+	*/
 
 	wait
 }
@@ -77,24 +50,47 @@ int main()
 using namespace std;
 #define wait std::cin.get();
 
-
-
 template<typename T, size_t S>
 class myArray
 {
 public:
-	constexpr int size() const { return S; }
 
+	int size() { return S; }
+
+	/*
 	T& operator[](int index) {
+		//cout << "T& []" << endl;
 		return m_data[index];
+	}*/
+
+	/*
+	const T& operator[](int index) const {
+		return m_data[index];
+	}*/
+
+	T* Data() {
+		return m_data;
 	}
 
-	//auto& arrayReference = data;
-	T* operator[](int index) {
-		return m_data[index];
+	const T* Data() const {
+		return m_data;
 	}
 
 	
+	const T& operator[](int index) const {
+		//当使用const 修饰函数时，并且返回值为引用类型时，必须使用const修饰返回值,https://blog.csdn.net/qq_44695386/article/details/106224838
+		cout << "T& [] const" << endl;
+		return m_data[index];
+	}
+	// 
+
+	const int mmx(int index) const {
+		// const 限定符修饰的返回的值，必定是cosnt类型?是const引用类型
+		// 所以，t& => const 时，t 必须为const
+		// https://blog.csdn.net/HackCyberX/article/details/133381523
+		cout << "mmx" << endl;
+		return m_data[index];
+	}
 
 private:
 	T m_data[S];
@@ -106,26 +102,31 @@ int main()
 	int size = 5;
 	myArray<int, 5> data;
 
-	int a[2] = { 1,2 };
-	auto& b = a;//????????
-
-	auto& arrayReference = data;//const 指针时
 	//const auto& arrayReference = data;//const 指针时
+	auto& arrayReference = data;//
+
+	//int a = arrayReference.mmx(1);
+	const int a1 = 99;
+	int b1 = a1;
+
+	const int& a2 = a1;
+	int& b2 = a2;
+	// int 可以 = const int, 
+	// int& 不能 = const int&；
+	// 所以当成员函数int& func const {} 的返回值是引用类型（int &） 时，必须添加const修饰符 （=> const int &） 
+	// 因为int& 不能 = const int&；
+	// 但是 int 可以 = const int, 所以返回值是不需要const修饰，因为int是静态变量
 
 	for (int i = 0;i <= data.size();i++) {
-		data[i] = i; //T& 
-		
-		cout << data[i] << endl;
+		//data[i] = i; //T& 
+		//cout << data[i] << endl;
 	}
 	//arrayReference[0] = 99;//const 引用 只能绑定在对象，不能绑定到常量
 
-
-
 	for (int i = 0;i <= data.size();i++) {
-		cout << data[i] << endl;
-		cout << arrayReference[i] << endl;//
+		//cout << data[i] << endl;
+		cout << "ary[] = " << arrayReference[i] << endl;//
 	}
-
 
 	wait
 }
@@ -534,18 +535,21 @@ int main()
 
 // const
 // https://www.bilibili.com/video/BV1oD4y1h7S3
-#if 0
+#if 1
 #include <iostream>
 using namespace std;
 
 class myen {
 public:
-	mutable int x;
+	//mutable int x;
+	int x;
 	int y;
-	int getx() const { //mutable x 可以修改 x= 11； 
-		//1、作于域内，不可以修改函数成员
-		//2、在外可以被const myen& a,a.getx调用
-		x = 11;
+	int getx()  { //mutable x 可以修改 x= 11； 
+		// 1、作于域内，不可以修改函数成员
+		// 2、在外可以被const myen& a,a.getx调用,并不是，原因是因为传进去的void fune(const myen& a) 
+		// https://blog.csdn.net/qq_39618959/article/details/127797046
+		//x = 11;
+		cout << "int getx() const " << endl;
 		return x;
 	}
 };
@@ -563,20 +567,19 @@ public:
 		// age = 99;
 	}
 
-
 };
 
 void fune(const myen& a) {
-	cout << a.getx() << endl;
+	cout << "a.getx() = " <<a.getx() << endl;
 }
 
 int main()
 {
-	cout << "myConst-----------------";
-	myen en1;
-	en1.x = 99;
-	en1.y = 12;
-	cout << en1.x << en1.y << endl;
+	cout << "myConst-----------------"<<endl;
+	const myen en1;
+	//en1.x = 99;
+	//en1.y = 12;
+	//cout << en1.x << en1.y << endl;
 	fune(en1);
 	std::cin.get();
 }
